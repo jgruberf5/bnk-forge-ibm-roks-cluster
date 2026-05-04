@@ -4,10 +4,13 @@ Forge-ready IBM ROKS cluster content focused on a single outcome: provision IBM 
 
 This repository contains:
 
-- one reusable OpenTofu deployment-pack module under `modules/cluster`
+- one reusable OpenTofu cluster deployment-pack module under `modules/cluster`
+- one reusable OpenTofu FLO deployment-pack module under `modules/flo`
 - one imported blueprint manifest under `blueprints/ibm-roks-cluster`
 
-The cluster wrapper now targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_roks_cluster_4//modules/cluster` while preserving BNK-friendly variable names.
+The cluster wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_roks_cluster_4//modules/cluster` while preserving BNK-friendly variable names.
+
+The FLO wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_2_3_flo//modules/flo` so BNK can install platform components onto an existing ROKS cluster.
 
 ## Design Goals
 
@@ -21,6 +24,13 @@ The cluster wrapper now targets the upstream module at `f5devcentral/ibmcloud_sc
 bnk-forge-ibm-roks-cluster-4/
   modules/
     cluster/
+      bnkforge.pack.json
+      README.md
+      tofu/
+        main.tf
+        variables.tf
+        outputs.tf
+    flo/
       bnkforge.pack.json
       README.md
       tofu/
@@ -57,3 +67,8 @@ With the accompanying BNK-Forge credential-template update, IBM credential templ
 2. Add this repository as a Blueprint Source and import `blueprints/ibm-roks-cluster/forge-blueprint.json`.
 3. Deploy the imported blueprint into an IBM project.
 4. After apply succeeds, run the managed-cluster detection flow in BNK if needed. The module emits the ROKS outputs BNK expects for inventory registration.
+
+## Available Modules
+
+- `modules/cluster` exposes `ibm_roks_single_nic` for provisioning a new IBM ROKS cluster plus the registry COS instance and transit gateway.
+- `modules/flo` exposes `ibm_roks_bnk_flo` for installing BNK onto an existing IBM ROKS cluster.
