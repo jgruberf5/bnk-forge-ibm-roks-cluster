@@ -4,7 +4,7 @@
     "name": "ibm_roks_bnk_license",
     "path": "modules/license",
     "version": "v0.7.0",
-    "category": "platform",
+    "category": "bnk",
     "description": "Deploy the BIG-IP Next License custom resource onto an existing IBM ROKS cluster using the upstream license module.",
     "provider": "ibm",
     "supported_platforms": ["ibm_roks"],

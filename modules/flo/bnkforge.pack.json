@@ -4,7 +4,7 @@
     "name": "ibm_roks_bnk_flo",
     "path": "modules/flo",
     "version": "v0.7.0",
-    "category": "platform",
+    "category": "bnk",
     "description": "Deploy F5 BIG-IP Next for Kubernetes onto an existing IBM ROKS cluster using the upstream FLO module, IBM Cloud, and COS-backed artifacts.",
     "provider": "ibm",
     "supported_platforms": ["ibm_roks"],
