@@ -3,7 +3,7 @@
   "module": {
     "name": "roks",
     "path": "modules/cluster",
-    "version": "4.0.0",
+    "version": "v0.7.0",
     "category": "infra",
     "description": "Provision an IBM ROKS cluster with registry COS and a transit gateway using a minimal operator input set.",
     "provider": "ibm",

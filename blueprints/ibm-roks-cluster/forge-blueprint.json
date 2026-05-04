@@ -2,9 +2,9 @@
   "schema_version": 1,
   "blueprint": {
     "id": "bnk-forge.ibm-roks-cluster-4",
-    "version": "4.0.0",
-    "name": "IBM ROKS Cluster",
-    "description": "Provision a single IBM ROKS cluster with registry COS and a transit gateway from a minimal input set."
+    "version": "v0.7.0",
+    "name": "IBM ROKs Foundation",
+    "description": "Provisions IBM Cloud ROKs cluster and attached Transit Gateway"
   },
   "compatibility": {
     "supported_platform_profiles": [
@@ -113,7 +113,7 @@
       "name": "ROKS Cluster",
       "description": "Provision the IBM ROKS cluster, registry COS instance, and transit gateway.",
       "module": "modules/cluster",
-      "version": "4.0.0",
+      "version": "v0.7.0",
       "depends_on": [],
       "inputs": {
         "ibmcloud_api_key": "${ibmcloud_api_key}",

@@ -1,6 +1,6 @@
 # BNK Forge IBM ROKS Cluster 4
 
-Forge-ready IBM ROKS cluster content focused on a single outcome: provision an IBM ROKS cluster together with the registry COS instance and transit gateway required for the cluster foundation.
+Forge-ready IBM ROKS cluster content focused on a single outcome: provision IBM Cloud ROKS cluster and attached Transit Gateway.
 
 This repository contains:
 

@@ -2,7 +2,7 @@
 
 ## Solution Description
 
-Deploys a single IBM ROKS cluster foundation with the registry COS instance and transit gateway required for cluster bootstrap.
+Provisions IBM Cloud ROKs cluster and attached Transit Gateway.
 
 This blueprint is intended to import into Forge as an Infrastructure blueprint with IBM as the cloud provider.
 
