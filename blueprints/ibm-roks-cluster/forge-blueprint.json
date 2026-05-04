@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "blueprint": {
+    "id": "bnk-forge.ibm-roks-cluster-4",
+    "version": "4.0.0",
+    "name": "IBM ROKS Cluster",
+    "description": "Provision a single IBM ROKS cluster with registry COS and a transit gateway from a minimal input set."
+  },
+  "compatibility": {
+    "supported_platform_profiles": [
+      "ibm_roks"
+    ],
+    "required_capabilities": []
+  },
+  "category": "infrastructure",
+  "cloud_provider": "ibm",
+  "icon": "Server",
+  "color": "blue",
+  "estimated_time": "30-60 minutes",
+  "estimated_cost": "IBM Cloud usage-based",
+  "difficulty": "intermediate",
+  "maturity": "reference",
+  "tags": [
+    "ibm",
+    "roks",
+    "openshift",
+    "cluster",
+    "infrastructure"
+  ],
+  "outcomes": [
+    "An IBM ROKS cluster is provisioned",
+    "A COS instance for the cluster registry is created from the cluster name",
+    "A transit gateway is created from the cluster name",
+    "Cluster outputs are available for managed-cluster registration in BNK"
+  ],
+  "prerequisites": [
+    {
+      "type": "requirement",
+      "description": "The modules/cluster deployment pack from this repository must already be synced into Forge."
+    },
+    {
+      "type": "credential_template",
+      "name": "ibmcloud_api_key",
+      "description": "Provide an IBM Cloud credential template or project secret that can supply the IBM Cloud API key."
+    }
+  ],
+  "input_summary": [
+    {
+      "label": "Input guidance",
+      "value": "Operators provide the cluster name, worker sizing, region, and IBM Cloud credentials. Registry COS and transit gateway names are derived automatically from the cluster name."
+    }
+  ],
+  "inputs": {
+    "required": [
+      {
+        "name": "ibmcloud_api_key",
+        "type": "string",
+        "description": "IBM Cloud API key for cluster provisioning.",
+        "sensitive": true
+      },
+      {
+        "name": "ibmcloud_cluster_region",
+        "type": "string",
+        "description": "IBM Cloud region for the ROKS cluster."
+      },
+      {
+        "name": "roks_cluster_name",
+        "type": "string",
+        "description": "Name of the IBM ROKS cluster to create."
+      },
+      {
+        "name": "workers_per_zone",
+        "type": "number",
+        "description": "Number of worker nodes per zone."
+      }
+    ],
+    "optional": [
+      {
+        "name": "ibmcloud_resource_group",
+        "type": "string",
+        "description": "IBM Cloud resource group used by the deployment.",
+        "default": "default"
+      },
+      {
+        "name": "min_worker_vcpu_count",
+        "type": "number",
+        "description": "Minimum worker node vCPU count.",
+        "default": 16
+      },
+      {
+        "name": "min_worker_memory_gb",
+        "type": "number",
+        "description": "Minimum worker node memory in GB.",
+        "default": 64
+      },
+      {
+        "name": "openshift_cluster_version",
+        "type": "string",
+        "description": "Desired OpenShift cluster version.",
+        "default": "4.18"
+      },
+      {
+        "name": "worker_pool_name",
+        "type": "string",
+        "description": "Worker pool name.",
+        "default": "default"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "id": "cluster",
+      "name": "ROKS Cluster",
+      "description": "Provision the IBM ROKS cluster, registry COS instance, and transit gateway.",
+      "module": "modules/cluster",
+      "version": "4.0.0",
+      "depends_on": [],
+      "inputs": {
+        "ibmcloud_api_key": "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
+        "roks_cluster_name": "${roks_cluster_name}",
+        "workers_per_zone": "${workers_per_zone}",
+        "min_worker_vcpu_count": "${min_worker_vcpu_count}",
+        "min_worker_memory_gb": "${min_worker_memory_gb}",
+        "openshift_cluster_version": "${openshift_cluster_version}",
+        "worker_pool_name": "${worker_pool_name}"
+      }
+    }
+  ]
+}
