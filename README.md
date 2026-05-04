@@ -6,11 +6,17 @@ This repository contains:
 
 - one reusable OpenTofu cluster deployment-pack module under `modules/cluster`
 - one reusable OpenTofu FLO deployment-pack module under `modules/flo`
+- one reusable OpenTofu CNEInstance deployment-pack module under `modules/cneinstance`
+- one reusable OpenTofu License deployment-pack module under `modules/license`
 - one imported blueprint manifest under `blueprints/ibm-roks-cluster`
 
 The cluster wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_roks_cluster_4//modules/cluster` while preserving BNK-friendly variable names.
 
 The FLO wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_2_3_flo//modules/flo` so BNK can install platform components onto an existing ROKS cluster.
+
+The CNEInstance wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_2_3_cneinstance//modules/cneinstance` for existing-cluster single-NIC deployments that build on top of FLO.
+
+The License wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_2_3_license//modules/license` for existing-cluster license registration after BNK platform components are available.
 
 ## Design Goals
 
@@ -31,6 +37,20 @@ bnk-forge-ibm-roks-cluster-4/
         variables.tf
         outputs.tf
     flo/
+      bnkforge.pack.json
+      README.md
+      tofu/
+        main.tf
+        variables.tf
+        outputs.tf
+    cneinstance/
+      bnkforge.pack.json
+      README.md
+      tofu/
+        main.tf
+        variables.tf
+        outputs.tf
+    license/
       bnkforge.pack.json
       README.md
       tofu/
@@ -72,3 +92,5 @@ With the accompanying BNK-Forge credential-template update, IBM credential templ
 
 - `modules/cluster` exposes `ibm_roks_single_nic` for provisioning a new IBM ROKS cluster plus the registry COS instance and transit gateway.
 - `modules/flo` exposes `ibm_roks_bnk_flo` for installing BNK onto an existing IBM ROKS cluster.
+- `modules/cneinstance` exposes `ibm_roks_bnk_cneinstance_single_nic` for installing the BIG-IP Next CNEInstance component onto an existing IBM ROKS cluster after FLO is available.
+- `modules/license` exposes `ibm_roks_bnk_license` for installing the BIG-IP Next License custom resource onto an existing IBM ROKS cluster after CNEInstance is available.

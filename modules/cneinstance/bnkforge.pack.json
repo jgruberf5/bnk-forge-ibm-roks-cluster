@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "module": {
+    "name": "ibm_roks_bnk_cneinstance_single_nic",
+    "path": "modules/cneinstance",
+    "version": "v0.7.0",
+    "category": "platform",
+    "description": "Deploy the BIG-IP Next CNEInstance component onto an existing IBM ROKS cluster using the upstream single-NIC CNEInstance module.",
+    "provider": "ibm",
+    "supported_platforms": ["ibm_roks"],
+    "tags": ["ibm", "roks", "openshift", "bnk", "cneinstance", "single-nic", "platform"]
+  },
+  "deployment_pack": {
+    "engine": "opentofu",
+    "runner_profile": "opentofu-default",
+    "working_directory": ".",
+    "entrypoints": {
+      "module_root": "tofu"
+    },
+    "lifecycle": {
+      "supports_init": true,
+      "supports_plan": true,
+      "supports_apply": true,
+      "supports_destroy": true,
+      "supports_refresh": true,
+      "supports_drift": true
+    }
+  },
+  "dependencies": {
+    "required": [],
+    "optional": []
+  },
+  "inputs": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key used to discover the target cluster and VPC.", "source": "user", "sensitive": true },
+      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides.", "source": "user" },
+      { "name": "roks_cluster_name_or_id", "type": "string", "description": "Name or ID of the existing IBM ROKS cluster where CNEInstance will be installed.", "source": "user" }
+    ],
+    "optional": [
+      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used to discover the target cluster.", "source": "user", "default": "default" },
+      { "name": "flo_namespace", "type": "string", "description": "Namespace where FLO is already installed.", "source": "user", "default": "f5-bnk" },
+      { "name": "flo_utils_namespace", "type": "string", "description": "Namespace for F5 utility components used by the CNEInstance deployment.", "source": "user", "default": "f5-utils" },
+      { "name": "f5_bigip_k8s_manifest_version", "type": "string", "description": "Manifest version used to configure the CNEInstance deployment.", "source": "user", "default": "2.3.0-bnpp-ehf-2-3.2598.3-0.0.17" },
+      { "name": "far_repo_url", "type": "string", "description": "FAR repository URL for BNK artifacts.", "source": "user", "default": "repo.f5.com" },
+      { "name": "flo_trusted_profile_id", "type": "string", "description": "IBM IAM trusted profile ID created by the FLO deployment.", "source": "user", "default": "" },
+      { "name": "flo_cluster_issuer_name", "type": "string", "description": "Cluster issuer name created by FLO for mTLS certificates.", "source": "user", "default": "" },
+      { "name": "cneinstance_deployment_size", "type": "string", "description": "CNEInstance deployment size.", "source": "user", "default": "Small" },
+      { "name": "cneinstance_gslb_datacenter_name", "type": "string", "description": "Optional GSLB datacenter name for the CNEInstance configuration.", "source": "user", "default": "" },
+      { "name": "cneinstance_network_attachments", "type": "array", "description": "Network attachment definitions used by the single-NIC CNEInstance deployment.", "source": "user", "default": ["ens3-ipvlan-l2", "macvlan-conf"] }
+    ]
+  },
+  "outputs": {
+    "key_outputs": [
+      { "name": "target_cluster_name_or_id", "type": "string", "description": "Name or ID of the existing target cluster passed into the wrapper." },
+      { "name": "cneinstance_enabled", "type": "boolean", "description": "Whether the CNEInstance resource was enabled for deployment." },
+      { "name": "cneinstance_name", "type": "string", "description": "Name of the created CNEInstance resource." },
+      { "name": "cneinstance_id", "type": "string", "description": "Identifier of the created CNEInstance resource." },
+      { "name": "cneinstance_namespace", "type": "string", "description": "Namespace where CNEInstance is deployed." },
+      { "name": "cneinstance_scc_policies_applied", "type": "map", "description": "Summary of SCC policies applied for the CNEInstance deployment." },
+      { "name": "pod_deployment_status", "type": "map", "description": "Pod deployment and readiness summary for FLO and utilities namespaces." }
+    ]
+  },
+  "credentials": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "cloud", "description": "IBM Cloud credential template or project secret providing the API key." }
+    ],
+    "optional": []
+  }
+}
