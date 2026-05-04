@@ -16,7 +16,7 @@ locals {
 }
 
 module "cluster" {
-  source = "git::https://github.com/f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_roks_2_3_single_nic.git//modules/cluster?ref=2.3.0-ehf-2-3.2598.3-0.0.17"
+  source = "git::https://github.com/f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_roks_cluster_4.git//modules/cluster?ref=main"
 
   ibmcloud_api_key          = var.ibmcloud_api_key
   cluster_region            = var.ibmcloud_cluster_region

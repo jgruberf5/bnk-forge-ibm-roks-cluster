@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "module": {
-    "name": "roks",
+    "name": "ibm_roks_single_nic",
     "path": "modules/cluster",
     "version": "v0.7.0",
     "category": "infra",

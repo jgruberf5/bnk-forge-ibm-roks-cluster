@@ -5,18 +5,18 @@ variable "ibmcloud_api_key" {
 }
 
 variable "ibmcloud_cluster_region" {
-  description = "IBM Cloud region for cluster resources"
+  description = "BNK-facing IBM Cloud region input mapped to the upstream cluster_region variable"
   type        = string
 }
 
 variable "ibmcloud_resource_group" {
-  description = "IBM Cloud resource group name"
+  description = "BNK-facing IBM Cloud resource group input mapped to the upstream resource_group variable"
   type        = string
   default     = "default"
 }
 
 variable "roks_cluster_name" {
-  description = "Name of the IBM ROKS cluster"
+  description = "BNK-facing cluster name mapped to the upstream openshift_cluster_name variable"
   type        = string
 }
 
@@ -38,13 +38,13 @@ variable "min_worker_memory_gb" {
 }
 
 variable "openshift_cluster_version" {
-  description = "OpenShift cluster version"
+  description = "OpenShift major.minor version passed through to the upstream module"
   type        = string
   default     = "4.18"
 }
 
 variable "worker_pool_name" {
-  description = "Worker pool name"
+  description = "Worker pool name passed through to the upstream module"
   type        = string
-  default     = "default"
+  default     = "tf-worker-pool"
 }

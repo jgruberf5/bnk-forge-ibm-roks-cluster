@@ -7,6 +7,8 @@ This repository contains:
 - one reusable OpenTofu deployment-pack module under `modules/cluster`
 - one imported blueprint manifest under `blueprints/ibm-roks-cluster`
 
+The cluster wrapper now targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_roks_cluster_4//modules/cluster` while preserving BNK-friendly variable names.
+
 ## Design Goals
 
 - only ask operators for the minimum cluster inputs
@@ -54,4 +56,4 @@ With the accompanying BNK-Forge credential-template update, IBM credential templ
 1. Add this repository as a Module Source and sync it.
 2. Add this repository as a Blueprint Source and import `blueprints/ibm-roks-cluster/forge-blueprint.json`.
 3. Deploy the imported blueprint into an IBM project.
-4. After apply succeeds, run the managed-cluster detection flow in BNK if needed. The module is cataloged as `roks` and emits the ROKS outputs BNK expects for inventory registration.
+4. After apply succeeds, run the managed-cluster detection flow in BNK if needed. The module emits the ROKS outputs BNK expects for inventory registration.
