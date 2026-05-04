@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "module": {
+    "name": "ibm_roks_bnk_license",
+    "path": "modules/license",
+    "version": "v0.7.0",
+    "category": "platform",
+    "description": "Deploy the BIG-IP Next License custom resource onto an existing IBM ROKS cluster using the upstream license module.",
+    "provider": "ibm",
+    "supported_platforms": ["ibm_roks"],
+    "tags": ["ibm", "roks", "openshift", "bnk", "license", "platform"]
+  },
+  "deployment_pack": {
+    "engine": "opentofu",
+    "runner_profile": "opentofu-default",
+    "working_directory": ".",
+    "entrypoints": {
+      "module_root": "tofu"
+    },
+    "lifecycle": {
+      "supports_init": true,
+      "supports_plan": true,
+      "supports_apply": true,
+      "supports_destroy": true,
+      "supports_refresh": true,
+      "supports_drift": true
+    }
+  },
+  "dependencies": {
+    "required": [],
+    "optional": []
+  },
+  "inputs": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key used to access the target cluster and optional COS resources.", "source": "user", "sensitive": true },
+      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides.", "source": "user" },
+      { "name": "roks_cluster_name_or_id", "type": "string", "description": "Name or ID of the existing IBM ROKS cluster where the License resource will be installed.", "source": "user" }
+    ],
+    "optional": [
+      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used to discover the target cluster and optional COS instance.", "source": "user", "default": "default" },
+      { "name": "flo_utils_namespace", "type": "string", "description": "Namespace where the License custom resource is deployed.", "source": "user", "default": "f5-utils" },
+      { "name": "license_mode", "type": "string", "description": "License operation mode for the BNK License custom resource.", "source": "user", "default": "connected" },
+      { "name": "use_cos_bucket", "type": "boolean", "description": "Whether the JWT token should be fetched from IBM Cloud Object Storage instead of passed directly.", "source": "user", "default": true },
+      { "name": "jwt_token", "type": "string", "description": "Direct JWT token for license authentication when COS is not used.", "source": "user", "sensitive": true, "default": "" },
+      { "name": "ibmcloud_cos_bucket_region", "type": "string", "description": "IBM Cloud region where the COS bucket is located.", "source": "user", "default": "us-south" },
+      { "name": "ibmcloud_cos_instance_name", "type": "string", "description": "IBM Cloud COS instance name containing the license JWT file.", "source": "user", "default": "bnk-orchestration" },
+      { "name": "ibmcloud_resources_cos_bucket", "type": "string", "description": "COS bucket containing the license JWT file.", "source": "user", "default": "bnk-schematics-resources" },
+      { "name": "f5_cne_subscription_jwt_file", "type": "string", "description": "License JWT filename in the COS bucket.", "source": "user", "default": "trial.jwt" }
+    ]
+  },
+  "outputs": {
+    "key_outputs": [
+      { "name": "target_cluster_name_or_id", "type": "string", "description": "Name or ID of the existing target cluster passed into the wrapper." },
+      { "name": "license_id", "type": "string", "description": "Name of the created License custom resource." },
+      { "name": "license_namespace", "type": "string", "description": "Namespace where the License custom resource is deployed." }
+    ]
+  },
+  "credentials": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "cloud", "description": "IBM Cloud credential template or project secret providing the API key." }
+    ],
+    "optional": []
+  }
+}
