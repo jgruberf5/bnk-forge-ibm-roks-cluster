@@ -27,7 +27,7 @@ variable "far_repo_url" {
 }
 
 variable "f5_bigip_k8s_manifest_version" {
-  description = "Version of the f5-bigip-k8s-manifest chart used by the upstream FLO workspace"
+  description = "Version of the f5-bigip-k8s-manifest chart used by the upstream FLO module"
   type        = string
   default     = "2.3.0-bnpp-ehf-2-3.2598.3-0.0.17"
 }

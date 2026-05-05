@@ -56,15 +56,15 @@ module "license" {
     http       = http
   }
 
-  enabled                        = true
-  use_cos_bucket                 = var.use_cos_bucket
-  jwt_token                      = var.jwt_token
-  ibmcloud_api_key               = var.ibmcloud_api_key
-  ibmcloud_cos_bucket_region     = var.ibmcloud_cos_bucket_region
-  ibmcloud_resource_group        = var.ibmcloud_resource_group
-  ibmcloud_cos_instance_name     = var.ibmcloud_cos_instance_name
-  ibmcloud_resources_cos_bucket  = var.ibmcloud_resources_cos_bucket
-  utils_namespace                = var.flo_utils_namespace
-  f5_cne_subscription_jwt_file   = var.f5_cne_subscription_jwt_file
-  license_mode                   = var.license_mode
+  enabled                       = true
+  use_cos_bucket                = var.use_cos_bucket
+  jwt_token                     = var.jwt_token
+  ibmcloud_api_key              = var.ibmcloud_api_key
+  ibmcloud_cos_bucket_region    = var.ibmcloud_cos_bucket_region
+  ibmcloud_resource_group       = var.ibmcloud_resource_group
+  ibmcloud_cos_instance_name    = var.ibmcloud_cos_instance_name
+  ibmcloud_resources_cos_bucket = var.ibmcloud_resources_cos_bucket
+  utils_namespace               = var.flo_utils_namespace
+  f5_cne_subscription_jwt_file  = var.f5_cne_subscription_jwt_file
+  license_mode                  = var.license_mode
 }

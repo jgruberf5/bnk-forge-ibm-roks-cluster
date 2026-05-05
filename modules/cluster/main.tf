@@ -10,9 +10,9 @@ terraform {
 }
 
 locals {
-  cos_instance_name     = "${var.roks_cluster_name}-registry-cos"
-  transit_gateway_name  = "${var.roks_cluster_name}-tgw"
-  cluster_vpc_name      = "${var.roks_cluster_name}-vpc"
+  cos_instance_name    = "${var.roks_cluster_name}-registry-cos"
+  transit_gateway_name = "${var.roks_cluster_name}-tgw"
+  cluster_vpc_name     = "${var.roks_cluster_name}-vpc"
 }
 
 module "cluster" {

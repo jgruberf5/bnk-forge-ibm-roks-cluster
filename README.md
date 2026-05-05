@@ -32,31 +32,27 @@ bnk-forge-ibm-roks-cluster-4/
     cluster/
       bnkforge.pack.json
       README.md
-      tofu/
-        main.tf
-        variables.tf
-        outputs.tf
+      main.tf
+      variables.tf
+      outputs.tf
     flo/
       bnkforge.pack.json
       README.md
-      tofu/
-        main.tf
-        variables.tf
-        outputs.tf
+      main.tf
+      variables.tf
+      outputs.tf
     cneinstance/
       bnkforge.pack.json
       README.md
-      tofu/
-        main.tf
-        variables.tf
-        outputs.tf
+      main.tf
+      variables.tf
+      outputs.tf
     license/
       bnkforge.pack.json
       README.md
-      tofu/
-        main.tf
-        variables.tf
-        outputs.tf
+      main.tf
+      variables.tf
+      outputs.tf
   blueprints/
     ibm-roks-cluster/
       forge-blueprint.json

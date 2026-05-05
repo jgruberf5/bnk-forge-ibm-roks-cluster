@@ -15,7 +15,7 @@
     "runner_profile": "opentofu-default",
     "working_directory": ".",
     "entrypoints": {
-      "module_root": "tofu"
+      "module_root": "."
     },
     "lifecycle": {
       "supports_init": true,
