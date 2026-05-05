@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "blueprint": {
+    "id": "ibm-roks-existing-cluster",
+    "version": "v1.0.0",
+    "name": "IBM ROKS Existing Cluster Registration",
+    "description": "Reference an existing IBM ROKS cluster and emit BNK registration outputs."
+  },
+  "compatibility": {
+    "supported_platform_profiles": ["ibm_roks"],
+    "required_capabilities": []
+  },
+  "category": "infrastructure",
+  "cloud_provider": "ibm",
+  "icon": "Server",
+  "color": "cyan",
+  "estimated_time": "5-10 minutes",
+  "estimated_cost": "No additional infrastructure cost",
+  "difficulty": "beginner",
+  "maturity": "reference",
+  "tags": ["ibm", "roks", "openshift", "cluster", "registration"],
+  "outcomes": [
+    "An existing IBM ROKS cluster is referenced by name or ID",
+    "Cluster outputs are available for BNK managed-cluster registration"
+  ],
+  "prerequisites": [
+    {
+      "type": "requirement",
+      "description": "The modules/roks-cluster-register deployment pack from this repository must already be synced into Forge."
+    },
+    {
+      "type": "credential_template",
+      "name": "ibmcloud_api_key",
+      "description": "Provide an IBM Cloud credential template or project secret that can supply the IBM Cloud API key."
+    }
+  ],
+  "input_summary": [
+    {
+      "label": "Input guidance",
+      "value": "Provide IBM Cloud API key, region, resource group, and the existing ROKS cluster name or ID."
+    }
+  ],
+  "inputs": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key for cluster discovery.", "sensitive": true },
+      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides." },
+      { "name": "roks_cluster_name_or_id", "type": "string", "description": "Existing IBM ROKS cluster name or ID." }
+    ],
+    "optional": [
+      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "default": "default" }
+    ]
+  },
+  "modules": [
+    {
+      "id": "cluster-register",
+      "name": "ROKS Cluster Register",
+      "description": "Resolve an existing IBM ROKS cluster and emit BNK registration outputs.",
+      "module": "modules/roks-cluster-register",
+      "version": "v1.0.0",
+      "depends_on": [],
+      "inputs": {
+        "ibmcloud_api_key": "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
+        "roks_cluster_name_or_id": "${roks_cluster_name_or_id}"
+      }
+    }
+  ]
+}

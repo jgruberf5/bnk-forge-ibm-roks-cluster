@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "blueprint": {
+    "id": "ibm-roks-cluster-create",
+    "version": "v1.0.0",
+    "name": "IBM ROKS Cluster Provisioning",
+    "description": "Create an IBM ROKS cluster backed by an existing COS instance and emit BNK registration outputs."
+  },
+  "compatibility": {
+    "supported_platform_profiles": ["ibm_roks"],
+    "required_capabilities": []
+  },
+  "category": "infrastructure",
+  "cloud_provider": "ibm",
+  "icon": "Server",
+  "color": "blue",
+  "estimated_time": "45-90 minutes",
+  "estimated_cost": "IBM Cloud usage-based",
+  "difficulty": "intermediate",
+  "maturity": "reference",
+  "tags": ["ibm", "roks", "openshift", "cluster", "infrastructure"],
+  "outcomes": [
+    "An IBM ROKS cluster is created",
+    "The cluster registry uses an existing COS instance referenced by name",
+    "Cluster outputs are available for BNK managed-cluster registration"
+  ],
+  "prerequisites": [
+    {
+      "type": "requirement",
+      "description": "The modules/roks-cluster-create deployment pack from this repository must already be synced into Forge."
+    },
+    {
+      "type": "credential_template",
+      "name": "ibmcloud_api_key",
+      "description": "Provide an IBM Cloud credential template or project secret that can supply the IBM Cloud API key."
+    }
+  ],
+  "input_summary": [
+    {
+      "label": "Input guidance",
+      "value": "Provide IBM Cloud API key, region, resource group, the desired cluster name, and the existing COS instance name used for the registry."
+    }
+  ],
+  "inputs": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key for cluster provisioning.", "sensitive": true },
+      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region for the ROKS cluster." },
+      { "name": "roks_cluster_name", "type": "string", "description": "Name of the IBM ROKS cluster to create." },
+      { "name": "ibmcloud_cos_instance_name", "type": "string", "description": "Name of the existing IBM COS instance used by the cluster registry." }
+    ],
+    "optional": [
+      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used by the deployment. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "default": "default" },
+      { "name": "workers_per_zone", "type": "number", "description": "Number of worker nodes per zone. OpenShift clusters typically require at least 2 workers per zone.", "default": 2 },
+      { "name": "openshift_cluster_version", "type": "string", "description": "Desired OpenShift major.minor version.", "default": "4.18" },
+      { "name": "min_worker_vcpu_count", "type": "number", "description": "Minimum worker vCPU count.", "default": 16 },
+      { "name": "min_worker_memory_gb", "type": "number", "description": "Minimum worker memory in GB.", "default": 64 },
+      { "name": "worker_flavor", "type": "string", "description": "Optional explicit worker flavor override.", "default": "" },
+      { "name": "cluster_vpc_name", "type": "string", "description": "Optional VPC name override.", "default": "" },
+      { "name": "cluster_vpc_cidr", "type": "string", "description": "Base CIDR for the created cluster VPC.", "default": "10.0.0.0/16" },
+      { "name": "zones", "type": "array", "description": "Optional explicit zone list.", "default": [] }
+    ]
+  },
+  "modules": [
+    {
+      "id": "cluster-create",
+      "name": "ROKS Cluster Create",
+      "description": "Create the IBM ROKS cluster and emit BNK registration outputs.",
+      "module": "modules/roks-cluster-create",
+      "version": "v1.0.0",
+      "depends_on": [],
+      "inputs": {
+        "ibmcloud_api_key": "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
+        "roks_cluster_name": "${roks_cluster_name}",
+        "ibmcloud_cos_instance_name": "${ibmcloud_cos_instance_name}",
+        "workers_per_zone": "${workers_per_zone}",
+        "openshift_cluster_version": "${openshift_cluster_version}",
+        "min_worker_vcpu_count": "${min_worker_vcpu_count}",
+        "min_worker_memory_gb": "${min_worker_memory_gb}",
+        "worker_flavor": "${worker_flavor}",
+        "cluster_vpc_name": "${cluster_vpc_name}",
+        "cluster_vpc_cidr": "${cluster_vpc_cidr}",
+        "zones": "${zones}"
+      }
+    }
+  ]
+}

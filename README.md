@@ -1,92 +1,87 @@
-# BNK Forge IBM ROKS Cluster 4
+# BNK Forge IBM ROKS Cluster
 
-Forge-ready IBM ROKS cluster content focused on a single outcome: provision IBM Cloud ROKS cluster and attached Transit Gateway.
+Forge-ready IBM ROKS content focused on two outcomes only:
 
-This repository contains:
+- create a new IBM ROKS cluster and emit BNK-compatible registration outputs
+- reference an existing IBM ROKS cluster and emit BNK-compatible registration outputs
 
-- one reusable OpenTofu cluster deployment-pack module under `modules/cluster`
-- one reusable OpenTofu FLO deployment-pack module under `modules/flo`
-- one reusable OpenTofu CNEInstance deployment-pack module under `modules/cneinstance`
-- one reusable OpenTofu License deployment-pack module under `modules/license`
-- one imported blueprint manifest under `blueprints/ibm-roks-cluster`
+## Repository Contents
 
-The cluster wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_roks_cluster_4//modules/cluster` while preserving BNK-friendly variable names.
+- `modules/roks-cluster-create`
+  Creates an IBM ROKS cluster using an existing IBM COS instance for the OpenShift registry.
 
-The FLO wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_2_3_flo//modules/flo` so BNK can install platform components onto an existing ROKS cluster.
+- `modules/roks-cluster-register`
+  Resolves an existing IBM ROKS cluster by name or ID and emits the outputs BNK Forge needs for managed-cluster registration.
 
-The CNEInstance wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_2_3_cneinstance//modules/cneinstance` for existing-cluster single-NIC deployments that build on top of FLO.
+- `blueprints/ibm-roks-cluster-create`
+  Blueprint that creates a new IBM ROKS cluster.
 
-The License wrapper targets the upstream module at `f5devcentral/ibmcloud_schematics_bigip_next_for_kubernetes_2_3_license//modules/license` for existing-cluster license registration after BNK platform components are available.
+- `blueprints/ibm-roks-existing-cluster`
+  Blueprint that references an existing IBM ROKS cluster.
 
 ## Design Goals
 
-- only ask operators for the minimum cluster inputs
-- derive supporting resource names from the requested ROKS cluster name
-- keep the module recognizable as a ROKS cluster so BNK can register it in the Operate Kubernetes inventory after deployment
+- keep the repository limited to cluster creation and cluster registration only
+- use IBM Cloud API key authentication with region and resource group inputs
+- use an existing COS instance name for the create-cluster flow
+- emit the output fields BNK Forge needs to register the cluster in the Kubernetes inventory
 
 ## Layout
 
 ```text
 bnk-forge-ibm-roks-cluster-4/
   modules/
-    cluster/
+    roks-cluster-create/
       bnkforge.pack.json
       README.md
       main.tf
       variables.tf
       outputs.tf
-    flo/
-      bnkforge.pack.json
-      README.md
-      main.tf
-      variables.tf
-      outputs.tf
-    cneinstance/
-      bnkforge.pack.json
-      README.md
-      main.tf
-      variables.tf
-      outputs.tf
-    license/
+    roks-cluster-register/
       bnkforge.pack.json
       README.md
       main.tf
       variables.tf
       outputs.tf
   blueprints/
-    ibm-roks-cluster/
+    ibm-roks-cluster-create/
       forge-blueprint.json
       README.md
-  examples/
-    project.auto.tfvars.example
+    ibm-roks-existing-cluster/
+      forge-blueprint.json
+      README.md
 ```
 
-## Required Inputs
+## BNK Registration Requirement
+
+BNK Forge registers IBM ROKS clusters from applied module outputs. Both modules in this repository emit the required fields:
+
+- `cluster_name`
+- `cluster_id`
+- `openshift_cluster_public_endpoint`
+- `region`
+
+After apply succeeds, run BNK managed-cluster detection to create the Kubernetes cluster entry.
+
+## IBM Cloud Credential Template Compatibility
+
+Both modules and both blueprints intentionally use the BNK Forge IBM credential-template variable names:
 
 - `ibmcloud_api_key`
 - `ibmcloud_cluster_region`
-- `ibmcloud_resource_group` (defaults to `default`)
-- `roks_cluster_name`
-- `workers_per_zone`
-- `min_worker_vcpu_count` (defaults to `16`)
-- `min_worker_memory_gb` (defaults to `64`)
+- `ibmcloud_resource_group`
 
-The cluster COS instance name and transit gateway name are derived from `roks_cluster_name`.
+That lets BNK Forge prefill these values from the selected IBM Cloud Credential Template in both flows:
 
-In Forge, the IBM Cloud API key, region, and resource group can still be prefilled from a Cloud Credential Template or project defaults even though the deployment-pack manifest models them as user-supplied values.
-
-With the accompanying BNK-Forge credential-template update, IBM credential templates now carry `ibmcloud_resource_group` and can automatically provide that value to stack deployments when the user leaves the blueprint input at its default.
+- Add Module to Project
+- Imported Blueprint deployment
 
 ## Import into BNK Forge
 
 1. Add this repository as a Module Source and sync it.
-2. Add this repository as a Blueprint Source and import `blueprints/ibm-roks-cluster/forge-blueprint.json`.
-3. Deploy the imported blueprint into an IBM project.
-4. After apply succeeds, run the managed-cluster detection flow in BNK if needed. The module emits the ROKS outputs BNK expects for inventory registration.
-
-## Available Modules
-
-- `modules/cluster` exposes `ibm_roks_single_nic` for provisioning a new IBM ROKS cluster plus the registry COS instance and transit gateway.
-- `modules/flo` exposes `ibm_roks_bnk_flo` for installing BNK onto an existing IBM ROKS cluster.
-- `modules/cneinstance` exposes `ibm_roks_bnk_cneinstance_single_nic` for installing the BIG-IP Next CNEInstance component onto an existing IBM ROKS cluster after FLO is available.
-- `modules/license` exposes `ibm_roks_bnk_license` for installing the BIG-IP Next License custom resource onto an existing IBM ROKS cluster after CNEInstance is available.
+2. Add this repository as a Blueprint Source and sync it.
+3. Import either:
+   - `blueprints/ibm-roks-cluster-create/forge-blueprint.json`
+   - `blueprints/ibm-roks-existing-cluster/forge-blueprint.json`
+4. Deploy the imported blueprint into an IBM project.
+5. Run BNK managed-cluster detection after apply succeeds.
