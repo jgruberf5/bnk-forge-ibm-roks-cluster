@@ -42,12 +42,12 @@
   ],
   "inputs": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key for cluster discovery.", "sensitive": true },
-      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides." },
+      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key for cluster discovery.", "sensitive": true, "source": "credential_template", "source_field": "ibmcloud_api_key" },
+      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides.", "source": "project", "source_field": "region" },
       { "name": "roks_cluster_name_or_id", "type": "string", "description": "Existing IBM ROKS cluster name or ID." }
     ],
     "optional": [
-      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "default": "default" }
+      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "default": "default", "source": "credential_template", "source_field": "ibmcloud_resource_group" }
     ]
   },
   "modules": [

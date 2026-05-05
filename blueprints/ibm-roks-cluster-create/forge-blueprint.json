@@ -43,13 +43,13 @@
   ],
   "inputs": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key for cluster provisioning.", "sensitive": true },
-      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region for the ROKS cluster." },
+      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key for cluster provisioning.", "sensitive": true, "source": "credential_template", "source_field": "ibmcloud_api_key" },
+      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region for the ROKS cluster.", "source": "project", "source_field": "region" },
       { "name": "roks_cluster_name", "type": "string", "description": "Name of the IBM ROKS cluster to create." },
       { "name": "ibmcloud_cos_instance_name", "type": "string", "description": "Name of the existing IBM COS instance used by the cluster registry." }
     ],
     "optional": [
-      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used by the deployment. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "default": "default" },
+      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used by the deployment. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "default": "default", "source": "credential_template", "source_field": "ibmcloud_resource_group" },
       { "name": "workers_per_zone", "type": "number", "description": "Number of worker nodes per zone. OpenShift clusters typically require at least 2 workers per zone.", "default": 2 },
       { "name": "openshift_cluster_version", "type": "string", "description": "Desired OpenShift major.minor version.", "default": "4.18" },
       { "name": "min_worker_vcpu_count", "type": "number", "description": "Minimum worker vCPU count.", "default": 16 },
