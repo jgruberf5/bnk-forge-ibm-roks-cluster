@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "module": {
+    "name": "ibm_roks_cluster_license",
+    "path": "modules/roks-cluster-license",
+    "version": "v1.0.0",
+    "category": "infra",
+    "description": "Apply a BNK License custom resource into an existing IBM ROKS cluster, fetching the subscription JWT from IBM Cloud Object Storage. Uses credentials from the IBM Cloud Credential Template.",
+    "provider": "ibm",
+    "supported_platforms": ["ibm_roks"],
+    "tags": ["ibm", "roks", "openshift", "license", "f5", "bnk", "infrastructure"]
+  },
+  "deployment_pack": {
+    "engine": "opentofu",
+    "runner_profile": "opentofu-default",
+    "working_directory": ".",
+    "entrypoints": {
+      "module_root": "."
+    },
+    "lifecycle": {
+      "supports_init": true,
+      "supports_plan": true,
+      "supports_apply": true,
+      "supports_destroy": true,
+      "supports_refresh": true,
+      "supports_drift": true
+    }
+  },
+  "dependencies": {
+    "required": [
+      { "module": "ibm_roks_cluster_cneinstall", "description": "CNEInstance must be installed first — the License CRD is delivered with the BNK platform installed by the CNEInstance chain." }
+    ],
+    "optional": []
+  },
+  "inputs": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key used to fetch cluster credentials and read the JWT from COS.", "source": "user", "sensitive": true },
+      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides.", "source": "user" },
+      { "name": "roks_cluster_name_or_id", "type": "string", "description": "Existing IBM ROKS cluster name or ID where the License CR will be deployed.", "source": "user" }
+    ],
+    "optional": [
+      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used for cluster discovery and COS lookup. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "source": "user", "default": "default" },
+      { "name": "use_cos_bucket", "type": "bool", "description": "Fetch the F5 subscription JWT from an IBM Cloud Object Storage bucket.", "source": "user", "default": true },
+      { "name": "ibmcloud_cos_bucket_region", "type": "string", "description": "IBM Cloud region where the COS bucket is located.", "source": "user", "default": "us-south" },
+      { "name": "ibmcloud_cos_instance_name", "type": "string", "description": "IBM Cloud COS instance name.", "source": "user", "default": "bnk-orchestration" },
+      { "name": "ibmcloud_resources_cos_bucket", "type": "string", "description": "IBM Cloud COS bucket containing the F5 subscription JWT.", "source": "user", "default": "bnk-schematics-resources" },
+      { "name": "f5_cne_subscription_jwt_file", "type": "string", "description": "Subscription JWT filename in the COS bucket.", "source": "user", "default": "trial.jwt" },
+      { "name": "jwt_token", "type": "string", "description": "F5 subscription JWT token (used only when use_cos_bucket = false).", "source": "user", "sensitive": true, "default": "" },
+      { "name": "license_mode", "type": "string", "description": "License operation mode (connected or disconnected).", "source": "user", "default": "connected" },
+      { "name": "flo_utils_namespace", "type": "string", "description": "Namespace where F5 utility components are installed (License CR is created here).", "source": "user", "default": "f5-utils" }
+    ]
+  },
+  "outputs": {
+    "key_outputs": [
+      { "name": "license_id", "type": "string", "description": "Name of the License custom resource." },
+      { "name": "license_namespace", "type": "string", "description": "Namespace where the License CR is deployed." },
+      { "name": "cluster_id", "type": "string", "description": "Cluster ID passthrough." }
+    ]
+  },
+  "credentials": {
+    "required": [
+      { "name": "ibmcloud_api_key", "type": "cloud", "description": "IBM Cloud credential template or project secret providing the API key." }
+    ],
+    "optional": []
+  }
+}
