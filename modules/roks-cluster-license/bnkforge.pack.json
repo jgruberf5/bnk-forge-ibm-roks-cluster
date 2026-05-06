@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "required": [
-      { "module": "ibm_roks_cluster_cneinstall", "description": "CNEInstance must be installed first — the License CRD is delivered with the BNK platform installed by the CNEInstance chain." }
+      { "module": "ibm_roks_cluster_cneinstall", "reason": "CNEInstance must be installed first — the License CRD is delivered with the BNK platform installed by the CNEInstance chain." }
     ],
     "optional": []
   },

@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "required": [
-      { "module": "ibm_roks_cluster_install_cert_manager", "description": "cert-manager must be installed before FLO so the FLO ClusterIssuer/Certificate CRs resolve." }
+      { "module": "ibm_roks_cluster_install_cert_manager", "reason": "cert-manager must be installed before FLO so the FLO ClusterIssuer/Certificate CRs resolve." }
     ],
     "optional": []
   },

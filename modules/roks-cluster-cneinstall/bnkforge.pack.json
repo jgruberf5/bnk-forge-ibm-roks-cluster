@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "required": [
-      { "module": "ibm_roks_cluster_install_flo", "description": "FLO must be installed first — the CNEInstance references the FLO ClusterIssuer and Trusted Profile." }
+      { "module": "ibm_roks_cluster_install_flo", "reason": "FLO must be installed first — the CNEInstance references the FLO ClusterIssuer and Trusted Profile." }
     ],
     "optional": []
   },
