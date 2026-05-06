@@ -6,6 +6,10 @@ terraform {
       source  = "IBM-Cloud/ibm"
       version = ">= 1.60.0"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = ">= 2.0.0"
+    }
   }
 }
 
@@ -31,6 +35,14 @@ data "ibm_container_vpc_cluster" "existing_cluster" {
 data "ibm_container_cluster_config" "cluster_config" {
   cluster_name_id = var.roks_cluster_name_or_id
   region          = var.ibmcloud_cluster_region
+}
+
+# ibm_container_cluster_config writes the kubeconfig to disk during apply;
+# read it back here so we can expose it as a base64-encoded output for
+# bnk-forge auto-registration.
+data "local_file" "kubeconfig" {
+  filename   = data.ibm_container_cluster_config.cluster_config.config_file_path
+  depends_on = [data.ibm_container_cluster_config.cluster_config]
 }
 
 resource "terraform_data" "registration_marker" {

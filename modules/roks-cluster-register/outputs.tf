@@ -33,3 +33,8 @@ output "region" {
 output "kube_host" {
   value = data.ibm_container_cluster_config.cluster_config.host
 }
+
+output "kubeconfig" {
+  value     = base64encode(data.local_file.kubeconfig.content)
+  sensitive = true
+}

@@ -37,3 +37,8 @@ output "cluster_vpc_id" {
 output "cos_instance_name" {
   value = data.ibm_resource_instance.registry_cos.name
 }
+
+output "kubeconfig" {
+  value     = base64encode(data.local_file.kubeconfig.content)
+  sensitive = true
+}
