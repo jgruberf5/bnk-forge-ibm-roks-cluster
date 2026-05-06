@@ -77,12 +77,6 @@
         "type": "string",
         "description": "Name of the IBM ROKS cluster to create.",
         "order": 20
-      },
-      {
-        "name": "ibmcloud_cos_instance_name",
-        "type": "string",
-        "description": "Name of the existing IBM COS instance used by the cluster registry and the FLO FAR auth key/JWT.",
-        "order": 21
       }
     ],
     "optional": [
@@ -94,6 +88,13 @@
         "source": "credential_template",
         "source_field": "ibmcloud_resource_group",
         "order": 12
+      },
+      {
+        "name": "ibmcloud_cos_instance_name",
+        "type": "string",
+        "description": "Name of the existing IBM COS instance used by the cluster registry and the FLO FAR auth key/JWT.",
+        "order": 21,
+        "default": "bnk-orchestration"
       },
       {
         "name": "workers_per_zone",

@@ -76,12 +76,6 @@
         "type": "string",
         "description": "Existing IBM ROKS cluster name or ID.",
         "order": 20
-      },
-      {
-        "name": "ibmcloud_cos_instance_name",
-        "type": "string",
-        "description": "Existing IBM COS instance that holds the FLO FAR auth key and subscription JWT.",
-        "order": 21
       }
     ],
     "optional": [
@@ -93,6 +87,13 @@
         "source": "credential_template",
         "source_field": "ibmcloud_resource_group",
         "order": 12
+      },
+      {
+        "name": "ibmcloud_cos_instance_name",
+        "type": "string",
+        "description": "Existing IBM COS instance that holds the FLO FAR auth key and subscription JWT.",
+        "order": 21,
+        "default": "bnk-orchestration"
       },
       {
         "name": "cert_manager_namespace",
