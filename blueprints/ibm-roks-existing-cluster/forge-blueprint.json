@@ -106,7 +106,7 @@
         "name": "f5_bigip_k8s_manifest_version",
         "type": "string",
         "description": "Version of the f5-bigip-k8s-manifest chart (FLO/CIS versions are extracted from this).",
-        "default": "2.3.0-bnpp-ehf-2-3.2598.3-0.0.17",
+        "default": "2.3.0-3.2598.3-0.0.170",
         "order": 50
       },
       {
@@ -165,6 +165,20 @@
         "sensitive": true,
         "order": 58,
         "default": ""
+      },
+      {
+        "name": "far_repo_url",
+        "type": "string",
+        "description": "FAR Repository URL for Docker and Helm registry.",
+        "default": "repo.f5.com",
+        "order": 59
+      },
+      {
+        "name": "f5_cne_far_auth_file",
+        "type": "string",
+        "description": "FAR auth key filename in the COS bucket (.tgz).",
+        "default": "f5-far-auth-key.tgz",
+        "order": 60
       },
       {
         "name": "nad_cni_type",
@@ -285,6 +299,8 @@
         "bigip_url": "${bigip_url}",
         "bigip_username": "${bigip_username}",
         "bigip_password": "${bigip_password}",
+        "far_repo_url": "${far_repo_url}",
+        "f5_cne_far_auth_file": "${f5_cne_far_auth_file}",
         "nad_cni_type": "${nad_cni_type}",
         "nad_interface_name": "${nad_interface_name}",
         "nad_ipvlan_mode": "${nad_ipvlan_mode}"
@@ -307,6 +323,7 @@
         "f5_bigip_k8s_manifest_version": "${f5_bigip_k8s_manifest_version}",
         "flo_namespace": "${flo_namespace}",
         "flo_utils_namespace": "${flo_utils_namespace}",
+        "far_repo_url": "${far_repo_url}",
         "cneinstance_deployment_size": "${cneinstance_deployment_size}",
         "cneinstance_gslb_datacenter_name": "${cneinstance_gslb_datacenter_name}",
         "cneinstance_network_attachments": "${cneinstance_network_attachments}"
