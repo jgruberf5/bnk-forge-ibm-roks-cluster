@@ -1,6 +1,6 @@
-# IBM ROKS Existing Cluster Registration Blueprint
+# BNK 2.3 Platform (IBM ROKS) Blueprint
 
-Forge **Stage 2 (Platform / BNK)** blueprint. References an existing IBM ROKS cluster and installs the BNK platform onto it.
+Forge **Stage 2 (Platform / BNK)** blueprint. References an existing IBM ROKS cluster and installs the BNK 2.3 platform onto it.
 
 ## What You Get
 
@@ -13,7 +13,7 @@ Forge **Stage 2 (Platform / BNK)** blueprint. References an existing IBM ROKS cl
 
 ## Lifecycle Stage
 
-This is a Stage 2 (Platform / BNK) blueprint — it assumes a ROKS cluster already exists. To create the cluster as well, use `ibm-roks-cluster-create` instead.
+This is a Stage 2 (Platform / BNK) blueprint — it assumes a ROKS cluster already exists. To create the cluster first, deploy `IBM ROKS Cluster` (the Stage 1 blueprint) and then run this one against it.
 
 ## Next Step
 

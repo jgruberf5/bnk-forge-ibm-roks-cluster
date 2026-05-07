@@ -2,9 +2,9 @@
   "schema_version": 1,
   "blueprint": {
     "id": "ibm-roks-existing-cluster",
-    "version": "v1.4.0",
-    "name": "IBM ROKS Existing Cluster Registration",
-    "description": "Reference an existing IBM ROKS cluster, emit BNK registration outputs, install cert-manager and the F5 Lifecycle Operator, deploy a CNEInstance, and apply the BNK License."
+    "version": "1.0.0",
+    "name": "BNK 2.3 Platform (IBM ROKS)",
+    "description": "Install the BNK 2.3 platform onto an existing IBM ROKS cluster. References the cluster, installs cert-manager and the F5 Lifecycle Operator, deploys a CNEInstance, and applies the BNK License."
   },
   "compatibility": {
     "supported_platform_profiles": [
