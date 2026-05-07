@@ -20,6 +20,7 @@
   "estimated_cost": "No additional infrastructure cost",
   "difficulty": "beginner",
   "maturity": "reference",
+  "bnk_version": "2.3",
   "tags": [
     "ibm",
     "roks",
