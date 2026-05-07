@@ -43,7 +43,7 @@
       { "name": "cert_manager_crd_ready", "type": "bool", "description": "Set to true when cert-manager has been applied and its CRDs are registered.", "source": "user", "default": true },
       { "name": "cert_manager_namespace", "type": "string", "description": "Namespace where cert-manager is installed.", "source": "user", "default": "cert-manager" },
       { "name": "far_repo_url", "type": "string", "description": "FAR Repository URL for Docker and Helm registry.", "source": "user", "default": "repo.f5.com" },
-      { "name": "f5_bigip_k8s_manifest_version", "type": "string", "description": "Version of the f5-bigip-k8s-manifest chart (FLO/CIS versions are extracted from this).", "source": "user", "default": "2.3.0-bnpp-ehf-2-3.2598.3-0.0.17" },
+      { "name": "f5_bigip_k8s_manifest_version", "type": "string", "description": "Version of the f5-bigip-k8s-manifest chart (FLO/CIS versions are extracted from this).", "source": "user", "default": "2.3.0-3.2598.3-0.0.170" },
       { "name": "use_cos_bucket", "type": "bool", "description": "Fetch FAR auth key and JWT from IBM Cloud Object Storage.", "source": "user", "default": true },
       { "name": "ibmcloud_cos_bucket_region", "type": "string", "description": "IBM Cloud region where the COS bucket is located.", "source": "user", "default": "us-south" },
       { "name": "ibmcloud_cos_instance_name", "type": "string", "description": "IBM Cloud COS instance name.", "source": "user", "default": "bnk-orchestration" },

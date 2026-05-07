@@ -12,7 +12,7 @@
     ],
     "required_capabilities": []
   },
-  "category": "infrastructure",
+  "category": "bnk",
   "cloud_provider": "ibm",
   "icon": "Server",
   "color": "cyan",

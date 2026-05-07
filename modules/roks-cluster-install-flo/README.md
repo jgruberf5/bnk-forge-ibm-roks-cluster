@@ -42,7 +42,7 @@ typically care about per-deployment:
 | `ibmcloud_api_key` | — | From the IBM Cloud Credential Template. |
 | `ibmcloud_cluster_region` | — | Region of the target cluster. |
 | `roks_cluster_name_or_id` | — | Existing ROKS cluster name or ID. |
-| `f5_bigip_k8s_manifest_version` | `2.3.0-bnpp-ehf-2-3.2598.3-0.0.17` | Drives FLO/CIS chart versions. |
+| `f5_bigip_k8s_manifest_version` | `2.3.0-3.2598.3-0.0.170` | Drives FLO/CIS chart versions. |
 | `bigip_url` / `bigip_username` / `bigip_password` | — | BIG-IP CIS controller login. |
 | `flo_namespace` | `f5-bnk` | Where FLO lives. |
 | `cert_manager_namespace` | `cert-manager` | Must match the cert-manager install. |
