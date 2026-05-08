@@ -3,12 +3,21 @@
   "module": {
     "name": "ibm_roks_cluster_install_cert_manager",
     "path": "modules/roks-cluster-install-cert-manager",
-    "version": "v1.0.0",
+    "version": "1.0.0",
     "category": "infra",
     "description": "Install cert-manager into an existing IBM ROKS cluster, using credentials from the IBM Cloud Credential Template.",
     "provider": "ibm",
-    "supported_platforms": ["ibm_roks"],
-    "tags": ["ibm", "roks", "openshift", "cert-manager", "tls", "infrastructure"]
+    "supported_platforms": [
+      "ibm_roks"
+    ],
+    "tags": [
+      "ibm",
+      "roks",
+      "openshift",
+      "cert-manager",
+      "tls",
+      "infrastructure"
+    ]
   },
   "deployment_pack": {
     "engine": "opentofu",
@@ -32,33 +41,119 @@
   },
   "inputs": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key used to fetch cluster credentials.", "source": "user", "sensitive": true },
-      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides.", "source": "user" },
-      { "name": "roks_cluster_name_or_id", "type": "string", "description": "Existing IBM ROKS cluster name or ID where cert-manager will be installed.", "source": "user" }
+      {
+        "name": "ibmcloud_api_key",
+        "type": "string",
+        "description": "IBM Cloud API key used to fetch cluster credentials.",
+        "source": "user",
+        "sensitive": true
+      },
+      {
+        "name": "ibmcloud_cluster_region",
+        "type": "string",
+        "description": "IBM Cloud region where the existing ROKS cluster resides.",
+        "source": "user"
+      },
+      {
+        "name": "roks_cluster_name_or_id",
+        "type": "string",
+        "description": "Existing IBM ROKS cluster name or ID where cert-manager will be installed.",
+        "source": "user"
+      }
     ],
     "optional": [
-      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "source": "user", "default": "default" },
-      { "name": "namespace", "type": "string", "description": "Kubernetes namespace for cert-manager.", "source": "user", "default": "cert-manager" },
-      { "name": "chart_version", "type": "string", "description": "cert-manager Helm chart version.", "source": "user", "default": "v1.17.3" },
-      { "name": "chart_repository", "type": "string", "description": "Helm chart repository URL.", "source": "user", "default": "https://charts.jetstack.io" },
-      { "name": "wait_for_deployment", "type": "bool", "description": "Wait for cert-manager pods to become ready before returning.", "source": "user", "default": true },
-      { "name": "timeout", "type": "number", "description": "Timeout (seconds) for the cert-manager Helm release.", "source": "user", "default": 300 },
-      { "name": "post_deployment_delay", "type": "number", "description": "Delay (seconds) after the Helm release to let CRDs register before downstream modules use them.", "source": "user", "default": 30 }
+      {
+        "name": "ibmcloud_resource_group",
+        "type": "string",
+        "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.",
+        "source": "user",
+        "default": "default"
+      },
+      {
+        "name": "namespace",
+        "type": "string",
+        "description": "Kubernetes namespace for cert-manager.",
+        "source": "user",
+        "default": "cert-manager"
+      },
+      {
+        "name": "chart_version",
+        "type": "string",
+        "description": "cert-manager Helm chart version.",
+        "source": "user",
+        "default": "v1.17.3"
+      },
+      {
+        "name": "chart_repository",
+        "type": "string",
+        "description": "Helm chart repository URL.",
+        "source": "user",
+        "default": "https://charts.jetstack.io"
+      },
+      {
+        "name": "wait_for_deployment",
+        "type": "bool",
+        "description": "Wait for cert-manager pods to become ready before returning.",
+        "source": "user",
+        "default": true
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "description": "Timeout (seconds) for the cert-manager Helm release.",
+        "source": "user",
+        "default": 300
+      },
+      {
+        "name": "post_deployment_delay",
+        "type": "number",
+        "description": "Delay (seconds) after the Helm release to let CRDs register before downstream modules use them.",
+        "source": "user",
+        "default": 30
+      }
     ]
   },
   "outputs": {
     "key_outputs": [
-      { "name": "namespace", "type": "string", "description": "Namespace where cert-manager is deployed." },
-      { "name": "helm_release_name", "type": "string", "description": "Name of the cert-manager Helm release." },
-      { "name": "helm_release_version", "type": "string", "description": "Installed cert-manager Helm chart version." },
-      { "name": "crd_ready", "type": "bool", "description": "True once cert-manager CRDs are expected to be registered." },
-      { "name": "cluster_id", "type": "string", "description": "Cluster ID passthrough." },
-      { "name": "cluster_name", "type": "string", "description": "Cluster name passthrough." }
+      {
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace where cert-manager is deployed."
+      },
+      {
+        "name": "helm_release_name",
+        "type": "string",
+        "description": "Name of the cert-manager Helm release."
+      },
+      {
+        "name": "helm_release_version",
+        "type": "string",
+        "description": "Installed cert-manager Helm chart version."
+      },
+      {
+        "name": "crd_ready",
+        "type": "bool",
+        "description": "True once cert-manager CRDs are expected to be registered."
+      },
+      {
+        "name": "cluster_id",
+        "type": "string",
+        "description": "Cluster ID passthrough."
+      },
+      {
+        "name": "cluster_name",
+        "type": "string",
+        "description": "Cluster name passthrough."
+      }
     ]
   },
   "credentials": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "cloud", "description": "IBM Cloud credential template or project secret providing the API key." }
+      {
+        "name": "ibmcloud_api_key",
+        "type": "cloud",
+        "description": "IBM Cloud credential template or project secret providing the API key."
+      }
     ],
     "optional": []
   }

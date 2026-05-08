@@ -3,12 +3,21 @@
   "module": {
     "name": "ibm_roks_cluster_register_existing",
     "path": "modules/roks-cluster-register",
-    "version": "v1.0.0",
+    "version": "1.0.0",
     "category": "infra",
     "description": "Reference an existing IBM ROKS cluster and emit BNK cluster-registration outputs.",
     "provider": "ibm",
-    "supported_platforms": ["ibm_roks"],
-    "tags": ["ibm", "roks", "openshift", "cluster", "registration", "infrastructure"]
+    "supported_platforms": [
+      "ibm_roks"
+    ],
+    "tags": [
+      "ibm",
+      "roks",
+      "openshift",
+      "cluster",
+      "registration",
+      "infrastructure"
+    ]
   },
   "deployment_pack": {
     "engine": "opentofu",
@@ -32,29 +41,87 @@
   },
   "inputs": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key used to discover the existing cluster.", "source": "user", "sensitive": true },
-      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the existing ROKS cluster resides.", "source": "user" },
-      { "name": "roks_cluster_name_or_id", "type": "string", "description": "Existing IBM ROKS cluster name or ID.", "source": "user" }
+      {
+        "name": "ibmcloud_api_key",
+        "type": "string",
+        "description": "IBM Cloud API key used to discover the existing cluster.",
+        "source": "user",
+        "sensitive": true
+      },
+      {
+        "name": "ibmcloud_cluster_region",
+        "type": "string",
+        "description": "IBM Cloud region where the existing ROKS cluster resides.",
+        "source": "user"
+      },
+      {
+        "name": "roks_cluster_name_or_id",
+        "type": "string",
+        "description": "Existing IBM ROKS cluster name or ID.",
+        "source": "user"
+      }
     ],
     "optional": [
-      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "source": "user", "default": "default" }
+      {
+        "name": "ibmcloud_resource_group",
+        "type": "string",
+        "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.",
+        "source": "user",
+        "default": "default"
+      }
     ]
   },
   "outputs": {
     "key_outputs": [
-      { "name": "cluster_id", "type": "string", "description": "Cluster ID alias for BNK cluster registration." },
-      { "name": "cluster_name", "type": "string", "description": "Cluster name alias for BNK cluster registration." },
-      { "name": "cluster_endpoint", "type": "string", "description": "Cluster API endpoint alias for BNK cluster registration." },
-      { "name": "openshift_cluster_id", "type": "string", "description": "OpenShift cluster ID." },
-      { "name": "openshift_cluster_name", "type": "string", "description": "OpenShift cluster name." },
-      { "name": "openshift_cluster_crn", "type": "string", "description": "OpenShift cluster CRN." },
-      { "name": "openshift_cluster_public_endpoint", "type": "string", "description": "Cluster API endpoint used by BNK managed-cluster registration." },
-      { "name": "region", "type": "string", "description": "IBM Cloud region for the cluster." }
+      {
+        "name": "cluster_id",
+        "type": "string",
+        "description": "Cluster ID alias for BNK cluster registration."
+      },
+      {
+        "name": "cluster_name",
+        "type": "string",
+        "description": "Cluster name alias for BNK cluster registration."
+      },
+      {
+        "name": "cluster_endpoint",
+        "type": "string",
+        "description": "Cluster API endpoint alias for BNK cluster registration."
+      },
+      {
+        "name": "openshift_cluster_id",
+        "type": "string",
+        "description": "OpenShift cluster ID."
+      },
+      {
+        "name": "openshift_cluster_name",
+        "type": "string",
+        "description": "OpenShift cluster name."
+      },
+      {
+        "name": "openshift_cluster_crn",
+        "type": "string",
+        "description": "OpenShift cluster CRN."
+      },
+      {
+        "name": "openshift_cluster_public_endpoint",
+        "type": "string",
+        "description": "Cluster API endpoint used by BNK managed-cluster registration."
+      },
+      {
+        "name": "region",
+        "type": "string",
+        "description": "IBM Cloud region for the cluster."
+      }
     ]
   },
   "credentials": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "cloud", "description": "IBM Cloud credential template or project secret providing the API key." }
+      {
+        "name": "ibmcloud_api_key",
+        "type": "cloud",
+        "description": "IBM Cloud credential template or project secret providing the API key."
+      }
     ],
     "optional": []
   }

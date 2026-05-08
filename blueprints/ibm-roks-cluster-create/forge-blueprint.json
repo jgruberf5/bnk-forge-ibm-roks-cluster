@@ -156,7 +156,7 @@
       "name": "ROKS Cluster Create",
       "description": "Create the IBM ROKS cluster and emit BNK registration outputs.",
       "module": "modules/roks-cluster-create",
-      "version": "v1.0.1",
+      "version": "1.0.0",
       "depends_on": [],
       "inputs": {
         "ibmcloud_api_key": "${ibmcloud_api_key}",

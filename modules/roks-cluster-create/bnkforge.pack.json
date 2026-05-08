@@ -3,12 +3,20 @@
   "module": {
     "name": "ibm_roks_cluster_create",
     "path": "modules/roks-cluster-create",
-    "version": "v1.0.0",
+    "version": "1.0.0",
     "category": "infra",
     "description": "Create an IBM ROKS cluster using an existing COS instance for the registry and emit BNK cluster-registration outputs.",
     "provider": "ibm",
-    "supported_platforms": ["ibm_roks"],
-    "tags": ["ibm", "roks", "openshift", "cluster", "infrastructure"]
+    "supported_platforms": [
+      "ibm_roks"
+    ],
+    "tags": [
+      "ibm",
+      "roks",
+      "openshift",
+      "cluster",
+      "infrastructure"
+    ]
   },
   "deployment_pack": {
     "engine": "opentofu",
@@ -32,40 +40,159 @@
   },
   "inputs": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "string", "description": "IBM Cloud API key used to provision the cluster.", "source": "user", "sensitive": true },
-      { "name": "ibmcloud_cluster_region", "type": "string", "description": "IBM Cloud region where the ROKS cluster will be created.", "source": "user" },
-      { "name": "roks_cluster_name", "type": "string", "description": "Name of the IBM ROKS cluster to create.", "source": "user" },
-      { "name": "ibmcloud_cos_instance_name", "type": "string", "description": "Name of the existing IBM COS instance used for the registry.", "source": "user" }
+      {
+        "name": "ibmcloud_api_key",
+        "type": "string",
+        "description": "IBM Cloud API key used to provision the cluster.",
+        "source": "user",
+        "sensitive": true
+      },
+      {
+        "name": "ibmcloud_cluster_region",
+        "type": "string",
+        "description": "IBM Cloud region where the ROKS cluster will be created.",
+        "source": "user"
+      },
+      {
+        "name": "roks_cluster_name",
+        "type": "string",
+        "description": "Name of the IBM ROKS cluster to create.",
+        "source": "user"
+      },
+      {
+        "name": "ibmcloud_cos_instance_name",
+        "type": "string",
+        "description": "Name of the existing IBM COS instance used for the registry.",
+        "source": "user"
+      }
     ],
     "optional": [
-      { "name": "ibmcloud_resource_group", "type": "string", "description": "IBM Cloud resource group for the cluster and COS lookup. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.", "source": "user", "default": "default" },
-      { "name": "workers_per_zone", "type": "number", "description": "Worker node count per zone. OpenShift clusters typically require at least 2 workers per zone.", "source": "user", "default": 2 },
-      { "name": "openshift_cluster_version", "type": "string", "description": "Desired OpenShift major.minor version.", "source": "user", "default": "4.18" },
-      { "name": "min_worker_vcpu_count", "type": "number", "description": "Minimum vCPU count used for worker flavor selection.", "source": "user", "default": 16 },
-      { "name": "min_worker_memory_gb", "type": "number", "description": "Minimum worker memory in GB used for worker flavor selection.", "source": "user", "default": 64 },
-      { "name": "worker_flavor", "type": "string", "description": "Optional explicit worker flavor override.", "source": "user", "default": "" },
-      { "name": "cluster_vpc_name", "type": "string", "description": "Optional VPC name override.", "source": "user", "default": "" },
-      { "name": "cluster_vpc_cidr", "type": "string", "description": "Base CIDR for the created cluster VPC.", "source": "user", "default": "10.0.0.0/16" },
-      { "name": "zones", "type": "array", "description": "Optional explicit zone list.", "source": "user", "default": [] }
+      {
+        "name": "ibmcloud_resource_group",
+        "type": "string",
+        "description": "IBM Cloud resource group for the cluster and COS lookup. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.",
+        "source": "user",
+        "default": "default"
+      },
+      {
+        "name": "workers_per_zone",
+        "type": "number",
+        "description": "Worker node count per zone. OpenShift clusters typically require at least 2 workers per zone.",
+        "source": "user",
+        "default": 2
+      },
+      {
+        "name": "openshift_cluster_version",
+        "type": "string",
+        "description": "Desired OpenShift major.minor version.",
+        "source": "user",
+        "default": "4.18"
+      },
+      {
+        "name": "min_worker_vcpu_count",
+        "type": "number",
+        "description": "Minimum vCPU count used for worker flavor selection.",
+        "source": "user",
+        "default": 16
+      },
+      {
+        "name": "min_worker_memory_gb",
+        "type": "number",
+        "description": "Minimum worker memory in GB used for worker flavor selection.",
+        "source": "user",
+        "default": 64
+      },
+      {
+        "name": "worker_flavor",
+        "type": "string",
+        "description": "Optional explicit worker flavor override.",
+        "source": "user",
+        "default": ""
+      },
+      {
+        "name": "cluster_vpc_name",
+        "type": "string",
+        "description": "Optional VPC name override.",
+        "source": "user",
+        "default": ""
+      },
+      {
+        "name": "cluster_vpc_cidr",
+        "type": "string",
+        "description": "Base CIDR for the created cluster VPC.",
+        "source": "user",
+        "default": "10.0.0.0/16"
+      },
+      {
+        "name": "zones",
+        "type": "array",
+        "description": "Optional explicit zone list.",
+        "source": "user",
+        "default": []
+      }
     ]
   },
   "outputs": {
     "key_outputs": [
-      { "name": "cluster_id", "type": "string", "description": "Cluster ID alias for BNK cluster registration." },
-      { "name": "cluster_name", "type": "string", "description": "Cluster name alias for BNK cluster registration." },
-      { "name": "cluster_endpoint", "type": "string", "description": "Cluster API endpoint alias for BNK cluster registration." },
-      { "name": "openshift_cluster_id", "type": "string", "description": "OpenShift cluster ID." },
-      { "name": "openshift_cluster_name", "type": "string", "description": "OpenShift cluster name." },
-      { "name": "openshift_cluster_crn", "type": "string", "description": "OpenShift cluster CRN." },
-      { "name": "openshift_cluster_public_endpoint", "type": "string", "description": "Cluster API endpoint used by BNK managed-cluster registration." },
-      { "name": "region", "type": "string", "description": "IBM Cloud region for the cluster." },
-      { "name": "cluster_vpc_id", "type": "string", "description": "Cluster VPC ID." },
-      { "name": "cos_instance_name", "type": "string", "description": "Referenced IBM COS instance name." }
+      {
+        "name": "cluster_id",
+        "type": "string",
+        "description": "Cluster ID alias for BNK cluster registration."
+      },
+      {
+        "name": "cluster_name",
+        "type": "string",
+        "description": "Cluster name alias for BNK cluster registration."
+      },
+      {
+        "name": "cluster_endpoint",
+        "type": "string",
+        "description": "Cluster API endpoint alias for BNK cluster registration."
+      },
+      {
+        "name": "openshift_cluster_id",
+        "type": "string",
+        "description": "OpenShift cluster ID."
+      },
+      {
+        "name": "openshift_cluster_name",
+        "type": "string",
+        "description": "OpenShift cluster name."
+      },
+      {
+        "name": "openshift_cluster_crn",
+        "type": "string",
+        "description": "OpenShift cluster CRN."
+      },
+      {
+        "name": "openshift_cluster_public_endpoint",
+        "type": "string",
+        "description": "Cluster API endpoint used by BNK managed-cluster registration."
+      },
+      {
+        "name": "region",
+        "type": "string",
+        "description": "IBM Cloud region for the cluster."
+      },
+      {
+        "name": "cluster_vpc_id",
+        "type": "string",
+        "description": "Cluster VPC ID."
+      },
+      {
+        "name": "cos_instance_name",
+        "type": "string",
+        "description": "Referenced IBM COS instance name."
+      }
     ]
   },
   "credentials": {
     "required": [
-      { "name": "ibmcloud_api_key", "type": "cloud", "description": "IBM Cloud credential template or project secret providing the API key." }
+      {
+        "name": "ibmcloud_api_key",
+        "type": "cloud",
+        "description": "IBM Cloud credential template or project secret providing the API key."
+      }
     ],
     "optional": []
   }
