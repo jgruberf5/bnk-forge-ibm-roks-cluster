@@ -57,7 +57,9 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  # Helm provider v3+ requires `kubernetes = {...}` (argument with equals),
+  # not the legacy v2 `kubernetes {...}` block syntax.
+  kubernetes = {
     host                   = try(data.ibm_container_cluster_config.cluster_config.host, "")
     token                  = try(data.ibm_container_cluster_config.cluster_config.token, "")
     cluster_ca_certificate = try(base64decode(data.ibm_container_cluster_config.cluster_config.ca_certificate), null)
