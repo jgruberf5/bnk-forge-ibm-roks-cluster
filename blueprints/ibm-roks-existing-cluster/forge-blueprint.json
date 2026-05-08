@@ -4,12 +4,10 @@
     "id": "ibm-roks-existing-cluster",
     "version": "1.0.0",
     "name": "BNK 2.3 Platform (IBM ROKS)",
-    "description": "Install the BNK 2.3 platform onto an existing IBM ROKS cluster. References the cluster, installs cert-manager and the F5 Lifecycle Operator, deploys a CNEInstance, and applies the BNK License."
+    "description": "Install the BNK 2.3 platform onto an existing IBM ROKS cluster: cert-manager, F5 Lifecycle Operator, CNEInstance, and the BNK License."
   },
   "compatibility": {
-    "supported_platform_profiles": [
-      "ibm_roks"
-    ],
+    "supported_platform_profiles": ["ibm_roks"],
     "required_capabilities": []
   },
   "category": "bnk",
@@ -18,47 +16,59 @@
   "color": "cyan",
   "estimated_time": "5-10 minutes",
   "estimated_cost": "No additional infrastructure cost",
-  "difficulty": "beginner",
+  "difficulty": "intermediate",
   "maturity": "reference",
   "bnk_version": "2.3",
-  "tags": [
-    "ibm",
-    "roks",
-    "openshift",
-    "cluster",
-    "registration"
-  ],
+  "tags": ["ibm", "roks", "openshift", "bnk", "2.3"],
   "outcomes": [
-    "An existing IBM ROKS cluster is referenced by name or ID",
-    "Cluster outputs are available for BNK managed-cluster registration",
-    "cert-manager is installed in the cluster and its CRDs are registered",
-    "F5 Lifecycle Operator (FLO) is installed and bound to an IBM IAM trusted profile",
-    "A CNEInstance is deployed and its TMM/Helm pods reach Ready",
-    "A BNK License CR is applied to the cluster using the JWT stored in IBM COS"
+    "Existing IBM ROKS cluster referenced by name or ID",
+    "cert-manager installed with its CRDs registered",
+    "F5 Lifecycle Operator (FLO) installed and bound to an IBM IAM trusted profile",
+    "CNEInstance deployed with TMM/Helm pods Ready",
+    "BNK License CR applied using the JWT from IBM COS"
   ],
   "prerequisites": [
     {
-      "type": "requirement",
-      "description": "The modules/roks-cluster-register, modules/roks-cluster-install-cert-manager, modules/roks-cluster-install-flo, modules/roks-cluster-cneinstall, and modules/roks-cluster-license deployment packs from this repository must already be synced into Forge."
+      "type": "kubernetes_cluster",
+      "description": "An existing IBM ROKS cluster reachable from the project. Use the 'IBM ROKS Cluster' blueprint to provision one if you don't have it yet."
     },
     {
       "type": "credential_template",
       "name": "ibmcloud_api_key",
-      "description": "Provide an IBM Cloud credential template or project secret that can supply the IBM Cloud API key."
+      "description": "IBM Cloud credential template that supplies the API key, default resource group, and the COS instance reference used to pull the FAR auth key + license JWT."
+    },
+    {
+      "type": "project_secret",
+      "name": "bigip_password",
+      "description": "BIG-IP admin password used by the FLO CIS controller. Stored encrypted in project secrets and injected at apply time — never serialized into terraform.tfvars.json or task output."
     }
   ],
   "input_summary": [
     {
       "label": "Input guidance",
-      "value": "Provide IBM Cloud API key, region, resource group, the existing ROKS cluster name or ID, and BIG-IP CIS controller credentials. The IBM COS instance is needed so FLO can pull its FAR auth key and JWT."
+      "value": "Select the project (which auto-fills IBM credentials, region, and resource group from its credential template), supply the existing ROKS cluster name or ID, and the BIG-IP URL/user. Everything else flows from the credential template, project secrets, and platform defaults."
     }
   ],
+  "platform_defaults": {
+    "roks": {
+      "container_platform": "Generic",
+      "storage_class_name": "ibmc-vpc-block-10iops-tier",
+      "cloud_provider": "ibm",
+      "cni_type": "ipvlan",
+      "nad_cni_type": "ipvlan",
+      "nad_interface_name": "ens3",
+      "nad_ipvlan_mode": "l2",
+      "cert_manager_namespace": "cert-manager",
+      "flo_namespace": "f5-bnk",
+      "flo_utils_namespace": "f5-utils"
+    }
+  },
   "inputs": {
     "required": [
       {
         "name": "ibmcloud_api_key",
         "type": "string",
-        "description": "IBM Cloud API key for cluster discovery.",
+        "description": "IBM Cloud API key.",
         "sensitive": true,
         "source": "credential_template",
         "source_field": "ibmcloud_api_key",
@@ -67,7 +77,7 @@
       {
         "name": "ibmcloud_cluster_region",
         "type": "string",
-        "description": "IBM Cloud region where the existing ROKS cluster resides.",
+        "description": "IBM Cloud region of the existing ROKS cluster.",
         "source": "project",
         "source_field": "region",
         "order": 11
@@ -83,162 +93,34 @@
       {
         "name": "ibmcloud_resource_group",
         "type": "string",
-        "description": "IBM Cloud resource group used for cluster discovery. Defaults to the value inherited from the selected IBM Cloud Credential Template, or 'default' if none is provided.",
+        "description": "IBM Cloud resource group used for cluster discovery. Inherits from the IBM credential template, falls back to 'default'.",
         "default": "default",
         "source": "credential_template",
         "source_field": "ibmcloud_resource_group",
         "order": 12
       },
       {
-        "name": "cert_manager_namespace",
-        "type": "string",
-        "description": "Kubernetes namespace for cert-manager.",
-        "default": "cert-manager",
-        "order": 40
-      },
-      {
-        "name": "cert_manager_version",
-        "type": "string",
-        "description": "cert-manager Helm chart version.",
-        "default": "v1.17.3",
-        "order": 41
-      },
-      {
-        "name": "f5_bigip_k8s_manifest_version",
-        "type": "string",
-        "description": "Version of the f5-bigip-k8s-manifest chart (FLO/CIS versions are extracted from this).",
-        "default": "2.3.0-3.2598.3-0.0.170",
-        "order": 50
-      },
-      {
-        "name": "flo_namespace",
-        "type": "string",
-        "description": "Namespace for F5 Lifecycle Operator.",
-        "default": "f5-bnk",
-        "order": 51
-      },
-      {
-        "name": "flo_utils_namespace",
-        "type": "string",
-        "description": "Namespace for F5 utility components.",
-        "default": "f5-utils",
-        "order": 52
-      },
-      {
-        "name": "ibmcloud_cos_bucket_region",
-        "type": "string",
-        "description": "IBM Cloud region where the COS bucket is located.",
-        "default": "us-south",
-        "order": 53
-      },
-      {
         "name": "ibmcloud_cos_instance_name",
         "type": "string",
-        "description": "Existing IBM COS instance that holds the FLO FAR auth key and subscription JWT.",
-        "order": 54,
-        "default": "bnk-orchestration"
-      },
-      {
-        "name": "ibmcloud_resources_cos_bucket",
-        "type": "string",
-        "description": "IBM Cloud COS bucket containing the FAR auth key and JWT files.",
-        "default": "bnk-schematics-resources",
-        "order": 55
+        "description": "IBM COS instance that holds the FLO FAR auth key and license JWT. Inherits from the IBM credential template.",
+        "default": "bnk-orchestration",
+        "source": "credential_template",
+        "source_field": "ibm_cos_instance_name",
+        "order": 30
       },
       {
         "name": "bigip_url",
         "type": "string",
-        "description": "BIG-IP URL used by the FLO CIS controller.",
-        "order": 56,
-        "default": ""
+        "description": "BIG-IP URL used by the FLO CIS controller (e.g. https://10.0.0.1).",
+        "default": "",
+        "order": 40
       },
       {
         "name": "bigip_username",
         "type": "string",
         "description": "BIG-IP username used by the FLO CIS controller.",
         "default": "admin",
-        "order": 57
-      },
-      {
-        "name": "bigip_password",
-        "type": "string",
-        "description": "BIG-IP password used by the FLO CIS controller.",
-        "sensitive": true,
-        "order": 58,
-        "default": ""
-      },
-      {
-        "name": "far_repo_url",
-        "type": "string",
-        "description": "FAR Repository URL for Docker and Helm registry.",
-        "default": "repo.f5.com",
-        "order": 59
-      },
-      {
-        "name": "f5_cne_far_auth_file",
-        "type": "string",
-        "description": "FAR auth key filename in the COS bucket (.tgz).",
-        "default": "f5-far-auth-key.tgz",
-        "order": 60
-      },
-      {
-        "name": "nad_cni_type",
-        "type": "string",
-        "description": "CNI type for NAD (host-device or ipvlan).",
-        "default": "ipvlan",
-        "order": 70
-      },
-      {
-        "name": "nad_interface_name",
-        "type": "string",
-        "description": "Network interface name for NAD.",
-        "default": "ens3",
-        "order": 71
-      },
-      {
-        "name": "nad_ipvlan_mode",
-        "type": "string",
-        "description": "IPVLAN mode (l2 or l3) \u2014 only used when nad_cni_type is ipvlan.",
-        "default": "l2",
-        "order": 72
-      },
-      {
-        "name": "cneinstance_deployment_size",
-        "type": "string",
-        "description": "Deployment size for CNEInstance (Small, Medium, Large).",
-        "default": "Small",
-        "order": 80
-      },
-      {
-        "name": "cneinstance_gslb_datacenter_name",
-        "type": "string",
-        "description": "GSLB datacenter name for CNEInstance (optional).",
-        "default": "",
-        "order": 81
-      },
-      {
-        "name": "cneinstance_network_attachments",
-        "type": "array",
-        "description": "Multus Network Attachment Definitions for the CNEInstance TMM deployments.",
-        "default": [
-          "ens3-ipvlan-l2",
-          "macvlan-conf"
-        ],
-        "order": 82
-      },
-      {
-        "name": "f5_cne_subscription_jwt_file",
-        "type": "string",
-        "description": "Subscription JWT filename in the COS bucket (used by the License module).",
-        "default": "trial.jwt",
-        "order": 90
-      },
-      {
-        "name": "license_mode",
-        "type": "string",
-        "description": "License operation mode (connected or disconnected).",
-        "default": "connected",
-        "order": 91
+        "order": 41
       }
     ]
   },
@@ -248,13 +130,13 @@
       "name": "ROKS Cluster Register",
       "description": "Resolve an existing IBM ROKS cluster and emit BNK registration outputs.",
       "module": "modules/roks-cluster-register",
-      "version": "v1.0.1",
+      "version": "v1.0.0",
       "depends_on": [],
       "inputs": {
-        "ibmcloud_api_key": "${ibmcloud_api_key}",
-        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
-        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
-        "roks_cluster_name_or_id": "${roks_cluster_name_or_id}"
+        "ibmcloud_api_key":         "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region":  "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group":  "${ibmcloud_resource_group}",
+        "roks_cluster_name_or_id":  "${roks_cluster_name_or_id}"
       }
     },
     {
@@ -263,16 +145,12 @@
       "description": "Install cert-manager into the registered ROKS cluster.",
       "module": "modules/roks-cluster-install-cert-manager",
       "version": "v1.0.0",
-      "depends_on": [
-        "cluster-register"
-      ],
+      "depends_on": ["cluster-register"],
       "inputs": {
-        "ibmcloud_api_key": "${ibmcloud_api_key}",
-        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
-        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
-        "roks_cluster_name_or_id": "${roks_cluster_name_or_id}",
-        "namespace": "${cert_manager_namespace}",
-        "chart_version": "${cert_manager_version}"
+        "ibmcloud_api_key":         "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region":  "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group":  "${ibmcloud_resource_group}",
+        "roks_cluster_name_or_id":  "${roks_cluster_name_or_id}"
       }
     },
     {
@@ -281,30 +159,16 @@
       "description": "Install FLO into the registered ROKS cluster after cert-manager is ready.",
       "module": "modules/roks-cluster-install-flo",
       "version": "v1.0.0",
-      "depends_on": [
-        "cert-manager"
-      ],
+      "depends_on": ["cert-manager"],
       "inputs": {
-        "ibmcloud_api_key": "${ibmcloud_api_key}",
-        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
-        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
-        "roks_cluster_name_or_id": "${roks_cluster_name_or_id}",
-        "cert_manager_namespace": "${cert_manager_namespace}",
-        "cert_manager_crd_ready": true,
-        "f5_bigip_k8s_manifest_version": "${f5_bigip_k8s_manifest_version}",
-        "flo_namespace": "${flo_namespace}",
-        "flo_utils_namespace": "${flo_utils_namespace}",
+        "ibmcloud_api_key":           "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region":    "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group":    "${ibmcloud_resource_group}",
+        "roks_cluster_name_or_id":    "${roks_cluster_name_or_id}",
         "ibmcloud_cos_instance_name": "${ibmcloud_cos_instance_name}",
-        "ibmcloud_resources_cos_bucket": "${ibmcloud_resources_cos_bucket}",
-        "ibmcloud_cos_bucket_region": "${ibmcloud_cos_bucket_region}",
-        "bigip_url": "${bigip_url}",
-        "bigip_username": "${bigip_username}",
-        "bigip_password": "${bigip_password}",
-        "far_repo_url": "${far_repo_url}",
-        "f5_cne_far_auth_file": "${f5_cne_far_auth_file}",
-        "nad_cni_type": "${nad_cni_type}",
-        "nad_interface_name": "${nad_interface_name}",
-        "nad_ipvlan_mode": "${nad_ipvlan_mode}"
+        "cert_manager_crd_ready":     true,
+        "bigip_url":                  "${bigip_url}",
+        "bigip_username":             "${bigip_username}"
       }
     },
     {
@@ -313,21 +177,12 @@
       "description": "Deploy a CNEInstance once FLO is ready. flo_trusted_profile_id and flo_cluster_issuer_name are auto-wired from the FLO module's outputs by the dependency graph.",
       "module": "modules/roks-cluster-cneinstall",
       "version": "v1.0.0",
-      "depends_on": [
-        "flo"
-      ],
+      "depends_on": ["flo"],
       "inputs": {
-        "ibmcloud_api_key": "${ibmcloud_api_key}",
-        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
-        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
-        "roks_cluster_name_or_id": "${roks_cluster_name_or_id}",
-        "f5_bigip_k8s_manifest_version": "${f5_bigip_k8s_manifest_version}",
-        "flo_namespace": "${flo_namespace}",
-        "flo_utils_namespace": "${flo_utils_namespace}",
-        "far_repo_url": "${far_repo_url}",
-        "cneinstance_deployment_size": "${cneinstance_deployment_size}",
-        "cneinstance_gslb_datacenter_name": "${cneinstance_gslb_datacenter_name}",
-        "cneinstance_network_attachments": "${cneinstance_network_attachments}"
+        "ibmcloud_api_key":         "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region":  "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group":  "${ibmcloud_resource_group}",
+        "roks_cluster_name_or_id":  "${roks_cluster_name_or_id}"
       }
     },
     {
@@ -336,21 +191,14 @@
       "description": "Apply the BNK License CR after CNEInstance is up. Pulls the F5 subscription JWT from the configured IBM COS bucket.",
       "module": "modules/roks-cluster-license",
       "version": "v1.0.0",
-      "depends_on": [
-        "cneinstance"
-      ],
+      "depends_on": ["cneinstance"],
       "inputs": {
-        "ibmcloud_api_key": "${ibmcloud_api_key}",
-        "ibmcloud_cluster_region": "${ibmcloud_cluster_region}",
-        "ibmcloud_resource_group": "${ibmcloud_resource_group}",
-        "roks_cluster_name_or_id": "${roks_cluster_name_or_id}",
-        "use_cos_bucket": true,
+        "ibmcloud_api_key":           "${ibmcloud_api_key}",
+        "ibmcloud_cluster_region":    "${ibmcloud_cluster_region}",
+        "ibmcloud_resource_group":    "${ibmcloud_resource_group}",
+        "roks_cluster_name_or_id":    "${roks_cluster_name_or_id}",
         "ibmcloud_cos_instance_name": "${ibmcloud_cos_instance_name}",
-        "ibmcloud_resources_cos_bucket": "${ibmcloud_resources_cos_bucket}",
-        "ibmcloud_cos_bucket_region": "${ibmcloud_cos_bucket_region}",
-        "f5_cne_subscription_jwt_file": "${f5_cne_subscription_jwt_file}",
-        "license_mode": "${license_mode}",
-        "flo_utils_namespace": "${flo_utils_namespace}"
+        "use_cos_bucket":             true
       }
     }
   ]
